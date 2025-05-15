@@ -1,9 +1,13 @@
 package com.example.balaton;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +24,7 @@ public class MapActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private MaterialToolbar topAppBar;
-
+    private ImageView hajoImage;
     private ImageView mapImage;
     private CoordinatorLayout mapRootLayout;
 
@@ -30,9 +34,7 @@ public class MapActivity extends AppCompatActivity {
             {0.65f, 0.72f, "Zamárdi"},
             {0.44f, 0.63f, "Füred"},
             {0.17f, 0.39f, "Keszthely"},
-            {0.19f, 0.27f, "Sümeg"},
             {0.32f, 0.61f, "Veszprém"},
-            {0.26f, 0.91f, "Nádasladány"},
             {0.17f, 0.41f, "Balatonlelle"}
     };
 
@@ -43,9 +45,15 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        hajoImage = findViewById(R.id.hajoImage);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigationView);
         topAppBar = findViewById(R.id.material_toolbar);
+
+        // Képernyő szélesség lekérdezése
+        WindowManager wm = getWindowManager();
+        Display display = wm.getDefaultDisplay();
+        int screenWidth = display.getWidth();
 
         // Hamburger ikon megnyitja a drawert
         topAppBar.setNavigationOnClickListener(v -> drawerLayout.open());
@@ -58,6 +66,14 @@ public class MapActivity extends AppCompatActivity {
             }
             return false;
         });
+
+        // Animáció létrehozása: a hajó mozog a képernyő széltől szélig
+        ObjectAnimator animator = ObjectAnimator.ofFloat(hajoImage, "translationX", 0, screenWidth - 100);
+        animator.setDuration(5000); // 5 másodperc
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.start();
+
 
         // Drawer menüelemek kezelése
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -78,6 +94,11 @@ public class MapActivity extends AppCompatActivity {
                 }
                 else if (id == R.id.nav_latnivalok) {
                     Intent intent = new Intent(MapActivity.this, LatnivaloActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else if (id == R.id.nav_gps) {
+                    Intent intent = new Intent(MapActivity.this, GPSActivity.class);
                     startActivity(intent);
                     return true;
                 }else if (id == R.id.nav_rolam) {
@@ -117,10 +138,18 @@ public class MapActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     private void onDotClick(View view) {
-        String message = (String) view.getTag(); // lekérjük a nevet
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        String varos = (String) view.getTag(); // lekérjük a nevet
+        Toast.makeText(this, varos, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, LatnivaloActivity.class);
+        intent.putExtra("varosSzuro", varos);
+        intent.putExtra("csakKedvencek", false);
+        startActivity(intent);
+
     }
 }

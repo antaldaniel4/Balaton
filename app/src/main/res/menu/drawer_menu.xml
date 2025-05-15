@@ -11,6 +11,9 @@
     <item android:id="@+id/nav_latnivalok"
         android:title="Latnivalók"
         android:icon="@drawable/ic_latnivalok"/>
+    <item android:id="@+id/nav_gps"
+        android:title="GPS"
+        android:icon="@drawable/ic_gps"/>
     <item android:id="@+id/nav_rolam"
         android:title="Rólam"
         android:icon="@drawable/ic_rolam"/>

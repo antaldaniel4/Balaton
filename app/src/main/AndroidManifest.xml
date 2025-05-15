@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Helyhozzáférési engedély -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Internet engedély Firestore és térképszolgáltatásokhoz -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,6 +22,8 @@
             android:name=".LatnivaloActivity"
             android:exported="false"
             android:theme="@style/Theme.Balaton" />
+        <activity android:name=".GPSActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

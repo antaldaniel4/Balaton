@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 import android.content.Context;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import com.google.firebase.firestore.PropertyName;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,54 +16,65 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Latnivalo {
-    private String Név;
-    private String Város;
-    private String Cím;
-    private List<String> Kategória;
-    private String Leírás;
+    private String Nev;
+    private String Varos;
+    private String Cim;
+    private List<String> Kategoria;
+    private String Leiras;
+    private boolean kedvenc;
 
-    public Latnivalo() {} // Firestore-hoz kell üres konstruktor
 
-    public String getNév() {
-        return Név;
+
+
+    public String getNev() {
+        return Nev != null ? Nev : "";
     }
 
-    public void setNév(String név) {
-        Név = név;
+    public String getVaros() {
+        return Varos != null ? Varos : "";
     }
 
-    public String getVáros() {
-        return Város;
+    public String getCim() {
+        return Cim != null ? Cim : "";
     }
 
-    public void setVáros(String város) {
-        Város = város;
+    public String getLeiras() {
+        return Leiras != null ? Leiras : "";
     }
 
-    public String getCím() {
-        return Cím;
+    public List<String> getKategoria() {
+        return Kategoria != null ? Kategoria : new ArrayList<>();
+    }
+    public boolean isKedvenc() {
+        return kedvenc;
     }
 
-    public void setCím(String cím) {
-        Cím = cím;
+    public void setKedvenc(boolean kedvenc) {
+        this.kedvenc = kedvenc;
     }
 
-    public List<String> getKategória() {
-        return Kategória;
+
+    public void setNev(String nev) {
+        Nev = nev;
     }
 
-    public void setKategória(List<String> kategória) {
-        Kategória = kategória;
+    public void setVaros(String varos) {
+        Varos = varos;
     }
 
-    public String getLeírás() {
-        return Leírás;
+    public void setCim(String cim) {
+        Cim = cim;
     }
 
-    public void setLeírás(String leírás) {
-        Leírás = leírás;
+    public void setKategoria(List<String> kategoria) {
+        Kategoria = kategoria;
     }
 
+    public void setLeiras(String leiras) {
+        Leiras = leiras;
+    }
+
+    public Latnivalo() {} // Firestore-hoz kell
     private void feltoltAdatokFirestoreba(Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -82,17 +93,17 @@ public class Latnivalo {
                 JSONObject obj = jsonArray.getJSONObject(i);
 
                 Latnivalo l = new Latnivalo();
-                l.setNév(obj.getString("Név"));
-                l.setVáros(obj.getString("Város"));
-                l.setCím(obj.getString("Cím"));
-                l.setLeírás(obj.getString("Leírás"));
+                l.setNev(obj.getString("Név"));
+                l.setVaros(obj.getString("Város"));
+                l.setCim(obj.getString("Cím"));
+                l.setLeiras(obj.getString("Leírás"));
 
                 JSONArray katArray = obj.getJSONArray("Kategória");
                 List<String> kategoriak = new ArrayList<>();
                 for (int j = 0; j < katArray.length(); j++) {
                     kategoriak.add(katArray.getString(j));
                 }
-                l.setKategória(kategoriak);
+                l.setKategoria(kategoriak);
 
                 db.collection("latnivalok").add(l);
             }
